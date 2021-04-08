@@ -3,7 +3,7 @@
 #include <string.h>
 #include "prod.h"
 
-int genererFacture(char client[], char num_facture[], T_TableauDeProduits produits[], int nb_references, int quantites[])
+int genererFacture(char client[], char num_facture[], T_TableauDeProduits produits, int nb_references, int quantites[])
 {
     FILE *ficFacture = NULL;
     char nomFacture[50] = "./factures/facture";
@@ -21,9 +21,9 @@ int genererFacture(char client[], char num_facture[], T_TableauDeProduits produi
 
         for (int i = 0; i < nb_references; i++)
         {
-            sous_total = quantites[i] * produits[i]->prixU;
+            sous_total = (float)quantites[i] * produits[i].prixU;
             total += sous_total;
-            fprintf(ficFacture, "%d %s (PU=%.2f€) :: %.2f€\n", quantites[i], produits[i]->libelle, produits[i]->prixU, sous_total);
+            fprintf(ficFacture, "%d %s (PU=%.2f€) :: %.2f€\n", quantites[i], produits[i].libelle, produits[i].prixU, sous_total);
         }
 
         fprintf(ficFacture, "\n\t\t\tTOTAL : %.2f€", total);

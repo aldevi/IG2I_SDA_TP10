@@ -6,6 +6,7 @@
 #include "prod.h"
 #include "lireCommande.h"
 #include "lireProduits.h"
+#include "genererFacture.h"
 
 int lireProchaineCommande() //pour lire l'int contenu dans nextFact
 {
@@ -46,6 +47,7 @@ char nomCommande[29];
 char nomClient[TAILLE];
 int quantite[TAILLE];
 tailleListe = lireProduits(listeProduits);
+int nbElt;
 	do //ce do while prend fin dès que fichier commandeXXXX.txt est absent 
 		{
 		strcpy(nomCommande,"./commandes/commande");
@@ -61,12 +63,13 @@ tailleListe = lireProduits(listeProduits);
 		if (ficCommande!=NULL)
 			{ // le fichier commandeNNNN.txt existe
 				printf("\n fichier %s present\n",nomCommande);
-				lireCommande(nomCommande, listeProduits, &tailleListe, nomClient, listeCommande, quantite); // à vous de coder cette fonction lors de ce TP9
+				nbElt = lireCommande(nomCommande, listeProduits, &tailleListe, nomClient, listeCommande, quantite); // à vous de coder cette fonction lors de ce TP9
 				fclose(ficCommande);
+				genererFacture(nomClient, NNNN, listeCommande, nbElt, quantite);
 			}
 		else
 			{
-				printf("\n toutes les commandes presentes ont ete traitees.");
+				printf("\n toutes les commandes presentes ont ete traitees.\n");
 				FILE *f=fopen("nextFact","w"); // on va ecrire la valeur de N dans enxtFact
 				fwrite(&N,1,sizeof(int),f);
 				fclose(f);
@@ -83,19 +86,50 @@ int main()
 {
 	//creation d un fichier d'un seul int nommé nextFact et contenant l'int 1
 	// code à utiliser pour réinitialiser nextFact à 1 si besoin au cours du TP 	
+	
+	int choix = 0;
 	FILE *f;
 	int N=1;
-	f=fopen("nextFact","w");
-	fwrite(&N,1,sizeof(int),f);
-	fclose(f);
-	 	
+
+	
+
+	do{
+		printf("\t --- MENU --- \n");
+		printf("1- Regenerer les factures\n");
+		printf("2- Generer les nouvelles factures\n");
+		printf("0- Quitter\n");
+		printf("Votre choix : ");
+		scanf("%d", &choix);
+
+		switch(choix){
+			case 1 :
+				f=fopen("nextFact","w");
+				fwrite(&N,1,sizeof(int),f);
+				fclose(f);
+				lireLesCommandes(); //lecture de tous les fichiers commandeXXX.txt (fichiers non traités jusqu'ici)	
+			break;
+
+			case 2 :
+				lireLesCommandes(); //lecture de tous les fichiers commandeXXX.txt (fichiers non traités jusqu'ici)	
+			break;
+
+			case 0 :
+				printf("Bye !\n");
+			break;
+
+			default :
+				printf("Mauvaise entree\n");
+			break;
+		}
+
+	} while (choix != 0);
+
+
 	//PARTIE 1 du TP : sans Gestion de stock
-	lireLesCommandes(); //lecture de tous les fichiers commandeXXX.txt (fichiers non traités jusqu'ici)	
 	
 
 	//PARTIE 2 du TP : avec Gestion de stock
 	//copiez coller votre travail précédent puis modifiez le  
 	//lireLesCommandes2(); 	
-
 	return 0;
 }

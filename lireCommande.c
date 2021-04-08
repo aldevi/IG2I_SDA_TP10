@@ -32,7 +32,7 @@ int lireCommande(const char * nomCommande, T_TableauDeProduits listeProduits, in
             i++;
         }
         fclose(commande);
-        return 1;
+        return i;
     }
 
     // On n'a pas réussi --> problème

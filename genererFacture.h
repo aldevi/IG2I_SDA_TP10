@@ -3,6 +3,6 @@
 
 #include "prod.h"
 
-int genererFacture(char client[], char num_facture[], T_TableauDeProduits produits[], int nb_references, int quantites[]);
+int genererFacture(char client[], char num_facture[], T_TableauDeProduits produits, int nb_references, int quantites[]);
 
 #endif

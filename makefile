@@ -15,5 +15,8 @@ lireCommande.o : lireCommande.c lireCommande.h
 lireProduits.o : lireProduits.c lireProduits.h
 	$(c) $(op) -c lireProduits.c -o lireProduits.o
 
+cleanFacture :
+	rm -rf ./factures/*.txt
+
 clean :
 	rm -rf *.o *.exe
