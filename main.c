@@ -4,6 +4,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include "prod.h"
+#include "lireCommande.h"
+#include "lireProduits.h"
 
 int lireProchaineCommande() //pour lire l'int contenu dans nextFact
 {
@@ -34,42 +36,45 @@ N4[0]=cm;N4[1]=cc;N4[2]=cd;N4[3]=cu;N4[4]='\0';
 void lireLesCommandes() //cette fonction ouvre tous les fichiers commandeXXX.txt avec XXXX démarrant à N
 {
 FILE *ficCommande=NULL;
+T_TableauDeProduits listeProduits; // Liste des produits
+T_TableauDeProduits listeCommande; // Liste commande par les utilisateurs
 int FINI=0;
+int tailleListe;
 int N = lireProchaineCommande(); //numero de la premiere commande qui sera lue et traitee
 char NNNN[5];
 char nomCommande[29];
-
-do //ce do while prend fin dès que fichier commandeXXXX.txt est absent 
-	{
-	strcpy(nomCommande,"./commandes/commande");
-	convertirNenChaine4(N,NNNN); 
-	//printf("\n==>%s<==",NNNN);
-	ficCommande=NULL;
-	strcat(nomCommande,NNNN);
-	strcat(nomCommande,".txt");
-	
-	//printf("\n traitement de  %s",nomCommande);
-	
-	ficCommande=fopen(nomCommande,"rt");
-	if (ficCommande!=NULL)
-		{ // le fichier commandeNNNN.txt existe
-			printf("\n fichier %s present",nomCommande);
-			//lireCommande(nomCommande); // à vous de coder cette fonction lors de ce TP9
-			fclose(ficCommande);
-		}
-	else
+char nomClient[TAILLE];
+int quantite[TAILLE];
+tailleListe = lireProduits(listeProduits);
+	do //ce do while prend fin dès que fichier commandeXXXX.txt est absent 
 		{
-			printf("\n toutes les commandes presentes ont ete traitees.");
-			FILE *f=fopen("nextFact","w"); // on va ecrire la valeur de N dans enxtFact 
-			// pour 
-			fwrite(&N,1,sizeof(int),f);
-			fclose(f);
-			FINI=1;			
-		}
+		strcpy(nomCommande,"./commandes/commande");
+		convertirNenChaine4(N,NNNN); 
+		//printf("\n==>%s<==",NNNN);
+		ficCommande=NULL;
+		strcat(nomCommande,NNNN);
+		strcat(nomCommande,".txt");
+		
+		printf("\n traitement de  %s\n",nomCommande);
+		
+		ficCommande=fopen(nomCommande,"rt");
+		if (ficCommande!=NULL)
+			{ // le fichier commandeNNNN.txt existe
+				printf("\n fichier %s present\n",nomCommande);
+				lireCommande(nomCommande, listeProduits, &tailleListe, nomClient, listeCommande, quantite); // à vous de coder cette fonction lors de ce TP9
+				fclose(ficCommande);
+			}
+		else
+			{
+				printf("\n toutes les commandes presentes ont ete traitees.");
+				FILE *f=fopen("nextFact","w"); // on va ecrire la valeur de N dans enxtFact
+				fwrite(&N,1,sizeof(int),f);
+				fclose(f);
+				FINI=1;			
+			}
 
-	N++;
-	}while(FINI==0);		
-
+		N++;
+		}while(FINI==0);		
 }
 
 
@@ -77,15 +82,13 @@ do //ce do while prend fin dès que fichier commandeXXXX.txt est absent
 int main()
 {
 	//creation d un fichier d'un seul int nommé nextFact et contenant l'int 1
-	// code à utiliser pour réinitialiser nextFact à 1 si besoin au cours du TP 
-	
-	/*
-	FILE *f;int N=1;
+	// code à utiliser pour réinitialiser nextFact à 1 si besoin au cours du TP 	
+	FILE *f;
+	int N=1;
 	f=fopen("nextFact","w");
 	fwrite(&N,1,sizeof(int),f);
 	fclose(f);
-	*/ 	
-
+	 	
 	//PARTIE 1 du TP : sans Gestion de stock
 	lireLesCommandes(); //lecture de tous les fichiers commandeXXX.txt (fichiers non traités jusqu'ici)	
 	

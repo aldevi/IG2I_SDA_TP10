@@ -1,3 +1,6 @@
+#ifndef _PROD_H_
+#define _PROD_H_
+
 #define TAILLE 50
 
 #define  NB_MAX_PRODUITS 1000
@@ -12,6 +15,6 @@ float prixU;
 
 typedef T_Produit T_TableauDeProduits[ NB_MAX_PRODUITS];
 
-
+#endif
 
 
